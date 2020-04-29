@@ -1,0 +1,40 @@
+body {
+  background-color: #F0F8FF;
+}
+
+#appContainer {
+	position: relative;
+    margin: auto;
+    width: 50%;
+	height: 600px;
+	/*background-color:white;*/
+}
+
+#instructions {
+    text-align: center;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #0066CC;
+	font-size: 0.9em;
+}
+
+#startButton {
+	position: relative;
+	margin: auto;
+	width: 100px;
+	height: 25px;
+	background-color: #0066CC;
+	border-radius: 4px;
+}
+
+#startButton > p {
+	padding-top: 0.5em;
+	font-family: Arial, Helvetica, sans-serif;
+	color: white;
+	font-size: 0.8em;
+}
+
+#startButton:active {
+	background-color: #cc33ff;
+	transition: all 0.75s;
+	transform: scale(7);
+}
