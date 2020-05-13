@@ -2,20 +2,48 @@
 
 function initiateApp() {
 	
+	createMaze();
 	createMazeGoer();
-	createDirectionCues();
+	//createDirectionCues();
 	startButton.style.display = "none";
 	hopMazeGoer();
 	
 }
 
 
+function buildWalls(t) {
+	
+	var targetBlock = document.getElementById(t);
+	if (!targetBlock.classList.contains('wall')) {
+		targetBlock.classList.add('wall');
+	} else {
+		targetBlock.classList.remove('wall');
+	}
+	
+}
+
+function createMaze() {
+
+	var x;	
+	for (x = 0; x < 225; x++) { 
+
+		// mazeBlock
+		var mazeBlock = document.createElement('div');
+		mazeBlock.setAttribute('class', 'mazeBlock');
+		app.appendChild(mazeBlock);
+		mazeBlock.setAttribute('id', mazeBlock.offsetTop.toString() + mazeBlock.offsetLeft.toString());
+		mazeBlock.setAttribute('onclick', 'buildWalls('+'"'+ mazeBlock.id +'"'+');');
+			
+	}
+
+}
+
 function createMazeGoer() {
 	
 	// mazeGoer
 	var mazeGoer = document.createElement('div');
 	mazeGoer.setAttribute('id', 'mazeGoer');
-	appContainer.appendChild(mazeGoer);
+	app.appendChild(mazeGoer);
 	
 		// mazeGoer styles
 		var mazeGoerBase = document.createElement('style');
@@ -23,8 +51,8 @@ function createMazeGoer() {
 		var mazeGoerBaseStyles = document.createTextNode( '' +
 			'#mazeGoer {' +
 			'  position: absolute;'+
-			'  top: 200px;'+
-			'  left: 400px;'+
+			'  top: 0px;'+
+			'  left: 0px;'+
 			'  width: 20px;'+
 			'  height: 20px;'+
 			'  border-radius: 10px;'+
@@ -40,7 +68,7 @@ function createDirectionCues() {
 	// cue
 	var cue = document.createElement('div');
 	cue.setAttribute('id', 'cue');
-	appContainer.appendChild(cue);
+	app.appendChild(cue);
 	
 		// cue styles
 		var cueBase = document.createElement('style');
@@ -48,7 +76,7 @@ function createDirectionCues() {
 		var cueBaseStyles = document.createTextNode( '' +
 			'#cue {' +
 			'  position: relative;'+
-			'  top: 100px;'+
+			'  top: 275px;'+
 			'  left: 700px;'+
 			'  width: 50px;'+
 			'  height: 50px;'+
@@ -94,7 +122,6 @@ function createDirectionCues() {
 		
 }
 
-
 function hopMazeGoer() {
 	
 	var mazeGoer = document.getElementById('mazeGoer');
@@ -103,33 +130,40 @@ function hopMazeGoer() {
 	document.onkeydown = function(event) {
 		switch (event.keyCode) {
 			case 37: // left
-				mazeGoer.style.left = (mazeGoer.offsetLeft - hopSize) + 'px';
-				hopCue(180);
+				if (!document.getElementById( (mazeGoer.offsetTop).toString() + (mazeGoer.offsetLeft - hopSize).toString() ).classList.contains('wall')) {
+					mazeGoer.style.left = (mazeGoer.offsetLeft - hopSize) + 'px';
+					hopCue(180);
+				}
 				break;
 			case 39: // right
-	            mazeGoer.style.left = (mazeGoer.offsetLeft + hopSize) + 'px';
-				hopCue(0);
+				if (!document.getElementById( (mazeGoer.offsetTop).toString() + (mazeGoer.offsetLeft + hopSize).toString() ).classList.contains('wall')) {
+		            mazeGoer.style.left = (mazeGoer.offsetLeft + hopSize) + 'px';
+					hopCue(0);
+				}
 				break;
 			case 38: // up
-	            mazeGoer.style.top = (mazeGoer.offsetTop - hopSize) + 'px';
-				hopCue(270);
+				if (!document.getElementById((mazeGoer.offsetTop - hopSize).toString() + (mazeGoer.offsetLeft).toString()).classList.contains('wall')) {
+		            mazeGoer.style.top = (mazeGoer.offsetTop - hopSize) + 'px';
+					hopCue(270);
+				}
 				break;
 			case 40: // down
-	            mazeGoer.style.top = (mazeGoer.offsetTop + hopSize) + 'px';
-				hopCue(90);
+				if (!document.getElementById((mazeGoer.offsetTop + hopSize).toString() + (mazeGoer.offsetLeft).toString()).classList.contains('wall')) {
+		            mazeGoer.style.top = (mazeGoer.offsetTop + hopSize) + 'px';
+					hopCue(90);
+				}
 				break;
 	    }
 	}
 	
 }
 
-
 function hopCue(rotateAngle) {
 	
-	var appContainer = document.getElementById('appContainer');
+	var app = document.getElementById('app');
 	var cue = document.getElementById('cue');
-	appContainer.removeChild(cue);
-	appContainer.appendChild(cue);
+	app.removeChild(cue);
+	app.appendChild(cue);
 	cue.style.transform = 'rotate('+rotateAngle+'deg)';
 	cue.style.transformOrigin = '0% 50%';
 	cue.classList.add('anim');
