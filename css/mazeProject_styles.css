@@ -3,11 +3,20 @@ body {
 }
 
 #appContainer {
+	position: absolute;
+    margin: auto;
+	top: 100px;
+    width: 100%;
+	/*background-color:gray;*/
+}
+
+#app {
 	position: relative;
     margin: auto;
-    width: 50%;
-	height: 600px;
-	/*background-color:white;*/
+    width: 300px;
+	height: 300px;
+	background-color: #e6f2ff;
+	box-shadow: -1px 2px 15px -5px rgba(0,0,0,0.75);
 }
 
 #instructions {
@@ -37,4 +46,18 @@ body {
 	background-color: #cc33ff;
 	transition: all 0.75s;
 	transform: scale(7);
+}
+
+.mazeBlock {
+	position: relative;
+	float: left;
+	width: 20px;
+	height: 20px;
+	outline: 1px solid #b3d7ff;
+	outline-offset: -1px;
+}
+
+.wall {
+	background-color:blue;
+	outline: 0px
 }
