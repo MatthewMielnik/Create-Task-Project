@@ -1,25 +1,46 @@
 
 
-function initiateApp() {
+function initiateApp(a) {
 	
-	createMaze();
-	createMazeGoer();
-	//createDirectionCues();
-	startButton.style.display = "none";
-	hopMazeGoer();
+	switch (a) {
+		case 'setup':
+			setUpMaze();
+			break;
+		case 'play':
+			playMaze();
+			break;
+		}
 	
 }
 
+function setUpMaze() {
 
-function buildWalls(t) {
+	createMaze();
+	var startButton = document.getElementById('startButton');
+	startButton.querySelector('p').innerHTML = "You're on!";
+	startButton.setAttribute('onclick', 'initiateApp("play")');
+	document.getElementById('instructions').querySelector('p').innerHTML = "Whoever is the Riddler... build your trap.<br><font size='2px' color='#a1a9b2'>Build or remove walls of your maze by selecting the squares.<br>Double click a square to choose destination of your maze – the winner spot.</font>";
 	
-	var targetBlock = document.getElementById(t);
-	if (!targetBlock.classList.contains('wall')) {
-		targetBlock.classList.add('wall');
-	} else {
-		targetBlock.classList.remove('wall');
+}
+
+function playMaze() {
+	
+	createMazeGoer();
+	hopMazeGoer();
+	createDirectionCues();
+	document.getElementById('startButton').style.display = 'none';
+	document.getElementById('instructions').querySelector('p').innerHTML = "Problem solver... it's your turn!<br><font size='2px' color='#a1a9b2'>Use the keyboard arrow keys to find your way out.</font>";
+	
+	document.getElementById('0140').classList.remove('nogo');
+	var blocks = document.getElementsByClassName('mazeBlock');
+	for (var i = 0; i < blocks.length; i++) {
+		var block = blocks[i];
+		block.removeAttribute('onclick');
+		block.removeAttribute('ondblclick');
+		block.style.outline = '0px';
+		block.style.background = '';
 	}
-	
+
 }
 
 function createMaze() {
@@ -32,10 +53,41 @@ function createMaze() {
 		mazeBlock.setAttribute('class', 'mazeBlock');
 		app.appendChild(mazeBlock);
 		mazeBlock.setAttribute('id', mazeBlock.offsetTop.toString() + mazeBlock.offsetLeft.toString());
-		mazeBlock.setAttribute('onclick', 'buildWalls('+'"'+ mazeBlock.id +'"'+');');
+		
+		if (mazeBlock.id !== '0140') {
+			mazeBlock.setAttribute('onclick', 'buildWalls('+'"'+ mazeBlock.id +'"'+')');
+			mazeBlock.setAttribute('ondblclick', 'setGoal('+'"'+ mazeBlock.id +'"'+')');
+		} else {
+			mazeBlock.classList.add('nogo');
+		}
 			
 	}
 
+}
+
+function buildWalls(t) {
+	
+	var targetBlock = document.getElementById(t);
+	if (!targetBlock.classList.contains('wall')) {
+		targetBlock.classList.add('wall');
+	} else {
+		targetBlock.classList.remove('wall');
+	}
+	
+}
+
+function setGoal(t) {
+	
+	var targetBlock = document.getElementById(t);
+	targetBlock.classList.remove('wall');
+	if (!targetBlock.classList.contains('prize')) {
+		targetBlock.classList.add('prize');
+		targetBlock.style.background = '#FDD220';
+	} else {
+		targetBlock.classList.remove('prize');
+		targetBlock.style.background = '';
+	}
+	
 }
 
 function createMazeGoer() {
@@ -52,11 +104,12 @@ function createMazeGoer() {
 			'#mazeGoer {' +
 			'  position: absolute;'+
 			'  top: 0px;'+
-			'  left: 0px;'+
+			'  left: 140px;'+
 			'  width: 20px;'+
 			'  height: 20px;'+
 			'  border-radius: 10px;'+
-			'  background-color: #cc33ff;'+
+			'  background: rgb(224,255,40);'+
+			'  background: radial-gradient(circle, rgba(255,235,40,1) 0%, rgba(213,171,0,1) 100%);'+
 			'}');
 		mazeGoerBase.appendChild(mazeGoerBaseStyles);
 		mazeGoer.appendChild(mazeGoerBase);
@@ -75,9 +128,9 @@ function createDirectionCues() {
 		cueBase.type = 'text/css';
 		var cueBaseStyles = document.createTextNode( '' +
 			'#cue {' +
-			'  position: relative;'+
-			'  top: 275px;'+
-			'  left: 700px;'+
+			'  position: absolute;'+
+			'  top: 100px;'+
+			'  left: 400px;'+
 			'  width: 50px;'+
 			'  height: 50px;'+
 			'  text-align: center;'+
@@ -114,6 +167,7 @@ function createDirectionCues() {
 		arrowBase.type = 'text/css';
 		var arrowBaseStyles = document.createTextNode( '' +
 			'#arrow {' +
+			'  position: relative;'+
 			'  font-size: 3em;'+
 			'  color: #d1d1e0;'+
 			'}');
@@ -130,31 +184,89 @@ function hopMazeGoer() {
 	document.onkeydown = function(event) {
 		switch (event.keyCode) {
 			case 37: // left
-				if (!document.getElementById( (mazeGoer.offsetTop).toString() + (mazeGoer.offsetLeft - hopSize).toString() ).classList.contains('wall')) {
+				var wallLocation = document.getElementById( (mazeGoer.offsetTop).toString() + (mazeGoer.offsetLeft - hopSize).toString() );
+				if (!wallLocation.classList.contains('wall')) {
 					mazeGoer.style.left = (mazeGoer.offsetLeft - hopSize) + 'px';
-					hopCue(180);
+					if (wallLocation.classList.contains('prize')) { prizeWon() };
 				}
+				hopCue(180);
 				break;
 			case 39: // right
-				if (!document.getElementById( (mazeGoer.offsetTop).toString() + (mazeGoer.offsetLeft + hopSize).toString() ).classList.contains('wall')) {
-		            mazeGoer.style.left = (mazeGoer.offsetLeft + hopSize) + 'px';
-					hopCue(0);
+				var wallLocation = document.getElementById( (mazeGoer.offsetTop).toString() + (mazeGoer.offsetLeft + hopSize).toString() );
+				if (!wallLocation.classList.contains('wall')) {
+					mazeGoer.style.left = (mazeGoer.offsetLeft + hopSize) + 'px';
+					if (wallLocation.classList.contains('prize')) { prizeWon() };
 				}
+				hopCue(0);
 				break;
 			case 38: // up
-				if (!document.getElementById((mazeGoer.offsetTop - hopSize).toString() + (mazeGoer.offsetLeft).toString()).classList.contains('wall')) {
+				var wallLocation = document.getElementById( (mazeGoer.offsetTop - hopSize).toString() + (mazeGoer.offsetLeft).toString() );
+				if (!wallLocation.classList.contains('wall')) {
 		            mazeGoer.style.top = (mazeGoer.offsetTop - hopSize) + 'px';
-					hopCue(270);
+					if (wallLocation.classList.contains('prize')) { prizeWon() };
 				}
+				hopCue(270);
 				break;
 			case 40: // down
-				if (!document.getElementById((mazeGoer.offsetTop + hopSize).toString() + (mazeGoer.offsetLeft).toString()).classList.contains('wall')) {
+				var wallLocation = document.getElementById( (mazeGoer.offsetTop + hopSize).toString() + (mazeGoer.offsetLeft).toString() );
+				if (!wallLocation.classList.contains('wall')) {
 		            mazeGoer.style.top = (mazeGoer.offsetTop + hopSize) + 'px';
-					hopCue(90);
+					if (wallLocation.classList.contains('prize')) { prizeWon() };
 				}
+				hopCue(90);
 				break;
 	    }
 	}
+	
+}
+
+function prizeWon() {
+	
+	var mazeGoer = document.getElementById('mazeGoer');
+	setTimeout(function() {
+		mazeGoer.classList.add('winner');
+		
+		// banner
+		var banner = document.createElement('div');
+		banner.setAttribute('id', 'banner');
+		banner.innerHTML = "Nice Job!";
+		banner.classList.add('anim');
+		banner.style.animationName = 'pop';
+		appContainer.appendChild(banner);
+		
+			// banner styles
+			var bannerBase = document.createElement('style');
+			bannerBase.type = 'text/css';
+			var bannerBaseStyles = document.createTextNode( '' +
+				'#banner {' +
+				'  position: relative;'+
+				'  top: -220px;'+
+				'  text-align: center;'+
+				'  text-align: center;'+
+				'  font-family: Arial, Helvetica, sans-serif;'+
+				'  color: #FDD220;'+
+				'  font-size: 5em;'+
+				'  font-weight: bold;'+
+				'  opacity: 0;'+
+				'}');
+			bannerBase.appendChild(bannerBaseStyles);
+			banner.appendChild(bannerBase);
+			
+			var bannerAnimation = document.createElement('style');
+			bannerAnimation.type = 'text/css';
+			var bannerAnimationStyles = document.createTextNode( '' +
+				'#banner.anim {' +
+				'  animation: pop 0.8s;'+
+				'}' +
+				'@keyframes pop {'+
+				'  0% { opacity:0; transform:scale(1,1); }'+
+				'  50% { opacity:1; transform:scale(2,2); }'+
+				'  100% { opacity:0; transform:scale(1,1); }'+
+				'}');
+			bannerAnimation.appendChild(bannerAnimationStyles);
+			banner.appendChild(bannerAnimation);
+		
+	}, 50);
 	
 }
 
