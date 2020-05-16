@@ -1,16 +1,54 @@
 body {
   background-color: #F0F8FF;
+  font-family: Arial, Helvetica, sans-serif;
   overflow: hidden;
 }
 
-#appContainer {
-	position: absolute;
-    margin: auto;
-	top: 150px;
-    width: 100%;
-	/*background-color:gray;*/
+
+
+#header {
+	position: relative;
+	height: 140px;
+    text-align: center;
+	color: #0066CC;
+	font-size: 0.9em;
 }
 
+
+
+#startButton {
+	position: absolute;
+	display: inline-block;
+	left: 0px;
+	right: 0px;
+	bottom: 0px;
+	margin: 0px auto;
+	width: 100px;
+	height: 25px;
+	background-color: #0066CC;
+	border-radius: 4px;
+	cursor: pointer;
+}
+#startButton > p {
+	position: relative; 
+	bottom: 5px;
+	color: white;
+	font-size: 0.8em;
+}
+#startButton:active {
+	background-color: #cc33ff;
+	transition: all 0.75s;
+	transform: scale(7);
+}
+
+
+
+#appContainer {
+	position: relative;
+    margin: auto;
+	margin-top: 40px;
+    width: 100%;
+}
 #app {
 	position: relative;
     margin: auto;
@@ -20,61 +58,20 @@ body {
 	box-shadow: -1px 2px 15px -5px rgba(0,0,0,0.75);
 }
 
-#instructions {
-    text-align: center;
-	font-family: Arial, Helvetica, sans-serif;
-	color: #0066CC;
-	font-size: 0.9em;
-}
 
-#startButton {
-	position: relative;
-	margin: auto;
-	width: 100px;
-	height: 25px;
-	background-color: #0066CC;
-	border-radius: 4px;
-	cursor: pointer;
-}
-
-#startButton > p {
-	padding-top: 0.5em;
-	font-family: Arial, Helvetica, sans-serif;
-	color: white;
-	font-size: 0.8em;
-}
-
-#startButton:active {
-	background-color: #cc33ff;
-	transition: all 0.75s;
-	transform: scale(7);
-}
-
-.winner {
-	transition: all 0.25s;
-	transform: scale(50);
-	opacity: 0;
-}
 
 .mazeBlock {
 	position: relative;
 	float: left;
 	width: 20px;
 	height: 20px;
-	font-family: Arial, Helvetica, sans-serif;
-	text-align: center;
-	color: #e6f2ff;
-	font-size: 1.2em;
-	line-height: 0.9em;
 	outline: 1px solid #b3d7ff;
 	outline-offset: -1px;
+	text-align: center;
+	font-size: 1.2em;
+	line-height: 0.9em;
+	color: #e6f2ff;
 }
-
-.wall {
-	background-color: #6281a8;
-	outline: 0px
-}
-
 .nogo {
 	background-color: #CFD9E5;
 	outline: 0px;
@@ -82,6 +79,27 @@ body {
     justify-content: center;
     align-items: center;
 }
+
+
+
+
+
+
+
+.winner {
+	transition: all 0.25s;
+	transform: scale(50);
+	opacity: 0;
+}
+
+
+
+.wall {
+	background-color: #6281a8;
+	outline: 0px
+}
+
+
 
 .nogo > p {
 	position: relative;
