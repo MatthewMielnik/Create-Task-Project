@@ -1,8 +1,8 @@
 
 
-function initiateApp(a) {
+function initiateApp(action) {
 	
-	switch (a) {
+	switch (action) {
 		case 'setup':
 			setUpMaze();
 			break;
@@ -15,13 +15,74 @@ function initiateApp(a) {
 
 function setUpMaze() {
 
-	createMaze();
-	var startButton = document.getElementById('startButton');
+	header.querySelector('p').innerHTML = ("Whoever is the Riddler... build your trap.<br>"+
+												"Build or remove walls of your maze by selecting the squares.<br>"+
+												"Double click a square to choose destination of your maze – the winner spot.");
+	
 	startButton.querySelector('p').innerHTML = "You're on!";
 	startButton.setAttribute('onclick', 'initiateApp("play")');
-	document.getElementById('instructions').querySelector('p').innerHTML = "Whoever is the Riddler... build your trap.<br><font size='2px' color='#a1a9b2'>Build or remove walls of your maze by selecting the squares.<br>Double click a square to choose destination of your maze – the winner spot.</font>";
+												
+	createMaze();
 	
 }
+
+	function createMaze() {
+
+		var x;	
+		for (x = 0; x < 225; x++) { 
+
+			// make mazeBlocks
+			var mazeBlock = document.createElement('div');
+			mazeBlock.setAttribute('class', 'mazeBlock');
+			app.appendChild(mazeBlock);
+			mazeBlock.setAttribute( 'id', mazeBlock.offsetTop.toString() + mazeBlock.offsetLeft.toString() );
+		
+			// identify player start block, show related info; attach maze building algos to remaining blocks
+			if (mazeBlock.id !== '0140') {
+				mazeBlock.addEventListener( 'click', buildWalls(this.id) );
+				mazeBlock.setAttribute( 'ondblclick', 'setGoal('+'"'+ mazeBlock.id +'"'+')' );
+			} else {
+				mazeBlock.classList.add('nogo');
+				var infoBox = mazeBlock.appendChild(document.createElement('p'));
+				infoBox.innerHTML = "The player starts here...";
+				mazeBlock.setAttribute('onmouseover', "(function(e){ e.children[0].style.display = 'inline' })(this)" );
+				mazeBlock.setAttribute('onmouseout', "(function(e){ e.children[0].style.display = 'none' })(this)" );
+			}
+			
+		}
+
+	}
+
+		function buildWalls(t) {
+	//alert(t + " : " + typeof t)
+			var targetBlock = document.getElementById(t);
+			if (!targetBlock.classList.contains('wall')) {
+				targetBlock.classList.add('wall');
+			} else {
+				targetBlock.classList.remove('wall');
+			}
+	
+		}
+
+		function setGoal(t) {
+	
+			var targetBlock = document.getElementById(t);
+			targetBlock.classList.remove('wall');
+			if (!targetBlock.classList.contains('prize')) {
+				targetBlock.classList.add('prize');
+				targetBlock.style.background = '#FDD220';
+			} else {
+				targetBlock.classList.remove('prize');
+				targetBlock.style.background = '';
+			}
+	
+		}
+
+
+
+
+
+
 
 function playMaze() {
 	
@@ -29,13 +90,13 @@ function playMaze() {
 	hopMazeGoer();
 	createDirectionCues();
 	document.getElementById('startButton').style.display = 'none';
-	document.getElementById('instructions').querySelector('p').innerHTML = "Problem solver... it's your turn!<br><font size='2px' color='#a1a9b2'>Use the keyboard arrow keys to find your way out.</font>";
+	document.getElementById('header').querySelector('p').innerHTML = "Problem solver... it's your turn!<br><font size='2px' color='#a1a9b2'>Use the keyboard arrow keys to find your way out.</font>";
 	
 	document.getElementById('0140').classList.remove('nogo');
 	var blocks = document.getElementsByClassName('mazeBlock');
 	for (var i = 0; i < blocks.length; i++) {
 		var block = blocks[i];
-		block.removeAttribute('onclick');
+		block.removeEventListener();
 		block.removeAttribute('ondblclick');
 		block.style.outline = '0px';
 		block.style.background = '';
@@ -43,56 +104,9 @@ function playMaze() {
 
 }
 
-function createMaze() {
 
-	var x;	
-	for (x = 0; x < 225; x++) { 
 
-		// mazeBlock
-		var mazeBlock = document.createElement('div');
-		mazeBlock.setAttribute('class', 'mazeBlock');
-		app.appendChild(mazeBlock);
-		mazeBlock.setAttribute('id', mazeBlock.offsetTop.toString() + mazeBlock.offsetLeft.toString());
-		
-		if (mazeBlock.id !== '0140') {
-			mazeBlock.setAttribute('onclick', 'buildWalls('+'"'+ mazeBlock.id +'"'+')');
-			mazeBlock.setAttribute('ondblclick', 'setGoal('+'"'+ mazeBlock.id +'"'+')');
-		} else {
-			mazeBlock.classList.add('nogo');
-			mazeBlock.appendChild(document.createElement('p'));
-			mazeBlock.children[0].innerHTML = "The player starts here...";
-			mazeBlock.setAttribute('onmouseover', "(function(e){ e.children[0].style.display = 'inline' })(this)" );
-			mazeBlock.setAttribute('onmouseout', "(function(e){ e.children[0].style.display = 'none' })(this)" );
-		}
-			
-	}
 
-}
-
-function buildWalls(t) {
-	
-	var targetBlock = document.getElementById(t);
-	if (!targetBlock.classList.contains('wall')) {
-		targetBlock.classList.add('wall');
-	} else {
-		targetBlock.classList.remove('wall');
-	}
-	
-}
-
-function setGoal(t) {
-	
-	var targetBlock = document.getElementById(t);
-	targetBlock.classList.remove('wall');
-	if (!targetBlock.classList.contains('prize')) {
-		targetBlock.classList.add('prize');
-		targetBlock.style.background = '#FDD220';
-	} else {
-		targetBlock.classList.remove('prize');
-		targetBlock.style.background = '';
-	}
-	
-}
 
 function createMazeGoer() {
 	
