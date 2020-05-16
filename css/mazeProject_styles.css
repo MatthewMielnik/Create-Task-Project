@@ -78,5 +78,28 @@ body {
 .nogo {
 	background-color: #CFD9E5;
 	outline: 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
+
+.nogo > p {
+	position: relative;
+	top: -25px;
+	flex-shrink: 0;
+	width: 150px;
+	font-family: Arial, Helvetica, sans-serif;
+	text-align: center;
+	color: #a1a9b2;
+	font-size: 0.6em;
+	pointer-events: none;
+	display: none;
+}
+
+.nogo:hover {
+	background-color: #d94cb1;
+}
+
+
+
 
