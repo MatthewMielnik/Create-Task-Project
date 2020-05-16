@@ -59,6 +59,10 @@ function createMaze() {
 			mazeBlock.setAttribute('ondblclick', 'setGoal('+'"'+ mazeBlock.id +'"'+')');
 		} else {
 			mazeBlock.classList.add('nogo');
+			mazeBlock.appendChild(document.createElement('p'));
+			mazeBlock.children[0].innerHTML = "The player starts here...";
+			mazeBlock.setAttribute('onmouseover', "(function(e){ e.children[0].style.display = 'inline' })(this)" );
+			mazeBlock.setAttribute('onmouseout', "(function(e){ e.children[0].style.display = 'none' })(this)" );
 		}
 			
 	}
@@ -223,6 +227,7 @@ function hopMazeGoer() {
 function prizeWon() {
 	
 	var mazeGoer = document.getElementById('mazeGoer');
+	
 	setTimeout(function() {
 		mazeGoer.classList.add('winner');
 		
@@ -282,3 +287,6 @@ function hopCue(rotateAngle) {
 	cue.style.animationName = 'pop';
 	
 }
+
+
+
