@@ -182,7 +182,7 @@ function playMaze() {
 				let hopTarget = (function() {
 					switch (directionOfMove) {
 					/* left */	case 37: return document.getElementById( (this.mazeGoer.offsetTop).toString() + (this.mazeGoer.offsetLeft - hopSize).toString() ); break;
-					/* right */ case 39: return document.getElementById( (this.mazeGoer.offsetTop).toString() + (this.mazeGoer.offsetLeft + hopSize).toString() ); break;
+					/* right */	case 39: return document.getElementById( (this.mazeGoer.offsetTop).toString() + (this.mazeGoer.offsetLeft + hopSize).toString() ); break;
 					/* up */	case 38: return document.getElementById( (this.mazeGoer.offsetTop - hopSize).toString() + (this.mazeGoer.offsetLeft).toString() ); break;
 					/* down */	case 40: return document.getElementById( (this.mazeGoer.offsetTop + hopSize).toString() + (this.mazeGoer.offsetLeft).toString() ); break;
 					}
@@ -191,7 +191,7 @@ function playMaze() {
 				let cl = hopTarget.classList;
 				switch (true) {
 					/* wall */	case cl.contains('wall')	: return 'wall'; break;
-					/* prize */ case cl.contains('prize')	: return 'prize'; break;
+					/* prize */	case cl.contains('prize')	: return 'prize'; break;
 					/* open */	default						: return null
 				}
 
