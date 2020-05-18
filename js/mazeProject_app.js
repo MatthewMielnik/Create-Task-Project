@@ -31,7 +31,6 @@ function setUpMaze() {
 	// call mazeBuilder method to build maze
 	mazeBuilder.makeMazeBlocks();
 	
-
 	// setup keyboard cues
 	app.appendChild(document.createElement('div')).id = 'cue';
 	cue.appendChild(document.createElement('p')).id = 'arrow';
@@ -100,7 +99,6 @@ function playMaze() {
 
 			let hopSize = 20;
 			document.onkeydown = function(event) {
-
 				switch (event.keyCode) {
 					case 37: // left
 						var cD_result = collisionDetector.testHopSpace(event.keyCode, hopSize);
@@ -110,7 +108,6 @@ function playMaze() {
 						}
 						hopCue(180);
 						break;
-						
 					case 39: // right
 						var cD_result = collisionDetector.testHopSpace(event.keyCode, hopSize);
 						if (cD_result != 'wall') {
@@ -119,7 +116,6 @@ function playMaze() {
 						}
 						hopCue(0);
 						break;
-						
 					case 38: // up
 						var cD_result = collisionDetector.testHopSpace(event.keyCode, hopSize);
 						if (cD_result != 'wall') {
@@ -128,7 +124,6 @@ function playMaze() {
 						}
 						hopCue(270);
 						break;
-						
 					case 40: // down
 						var cD_result = collisionDetector.testHopSpace(event.keyCode, hopSize);
 						if (cD_result != 'wall') {
@@ -136,11 +131,9 @@ function playMaze() {
 							(cD_result == 'prize') ? prizeWon() : null;
 						}
 						hopCue(90);
-						break;
-						
+						break;		
 			    }
 			}
-	
 		}
 	
 		var collisionDetector = {
@@ -181,7 +174,7 @@ function playMaze() {
 
 		function prizeWon() {
 	
-			// exit animations and restart
+			// winner banner and maze walls animation
 			function contentsAnimations() {
 	
 				header.style.opacity = 0;
@@ -198,11 +191,13 @@ function playMaze() {
 				}
 		
 			}
-	
+			
+			// app spin animation
 			function appAnimations() {
 				app.classList.add('appAnim');
 			}
-
+			
+			// game restart button
 			function restartGame() {
 				appContainer.appendChild(document.createElement('div')).id = 'restartButton';
 				restartButton.appendChild(document.createElement('p'));
