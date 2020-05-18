@@ -28,30 +28,16 @@ function setUpMaze() {
 	startButton.addEventListener( 'click', playMaze );
 
 
-	// build base of the maze
-	for (let x = 0; x < 225; x++) { 
-
-		// make mazeBlocks
-		const mazeBlock = document.createElement('div');
-		mazeBlock.className = 'mazeBlock mazeBlockSetup';
-		app.appendChild(mazeBlock);
-		mazeBlock.id = mazeBlock.offsetTop.toString() + mazeBlock.offsetLeft.toString();
-	
-		// identify player start block, show info; attach maze building algos to remaining blocks
-		if (mazeBlock.id != '0140') {
-			mazeBlock.addEventListener( 'click', buildWalls );
-			mazeBlock.addEventListener( 'dblclick', setGoal );
-		} else {
-			mazeBlock.classList.add('nogo');
-			var infoBox = mazeBlock.appendChild(document.createElement('p'));
-			infoBox.innerHTML = "The player starts here...";
-			mazeBlock.addEventListener( 'mouseover', function(){ infoBox.style.display = 'inline' } );
-			mazeBlock.addEventListener( 'mouseout', function(){ infoBox.style.display = 'none' } );
-		}
-		
-	}
+	// call mazeBuilder method to build maze
+	mazeBuilder.makeMazeBlocks();
 	
 
+	// setup keyboard cues
+	app.appendChild(document.createElement('div')).id = 'cue';
+	cue.appendChild(document.createElement('p')).id = 'arrow';
+	arrow.innerHTML = "&#10140;";
+	
+	
 	/*==================================================================================
 	function getRandom(arr, n) {
 	    var result = new Array(n),
@@ -76,29 +62,37 @@ function setUpMaze() {
 	})();
 	*/// ==================================================================================
 
-
-	// setup keyboard cues
-	app.appendChild(document.createElement('div')).id = 'cue';
-	cue.appendChild(document.createElement('p')).id = 'arrow';
-	arrow.innerHTML = "&#10140;";
-
 }
 
-		function buildWalls() {
-			if (!this.classList.contains('wall')) {
-				this.classList.add('wall');
-			} else {
-				this.classList.remove('wall');
-			}
-		}
+		var mazeBuilder = {
+			
+			blocksRequired : (function() { return Math.pow((300 / 20), 2) })(),
+			nogoBlock : '0140',
+			buildWalls : function() { (!this.classList.contains('wall')) ? this.classList.add('wall') : this.classList.remove('wall') },
+			setGoal : function() { (!this.classList.contains('prize')) ? this.classList.add('prize', 'prizeSetup') : this.classList.remove('prize', 'prizeSetup') },
+			makeMazeBlocks : function() {
 
-		function setGoal() {
-			this.classList.remove('wall');
-			if (!this.classList.contains('prize')) {
-				this.classList.add('prize', 'prizeSetup');
-			} else {
-				this.classList.remove('prize', 'prizeSetup');
-			}
+				for (let x = 0; x < this.blocksRequired; x++) {
+					
+					// make mazeBlock
+					const mazeBlock = document.createElement('div');
+					mazeBlock.className = 'mazeBlock mazeBlockSetup';
+					app.appendChild(mazeBlock);
+					mazeBlock.id = mazeBlock.offsetTop.toString() + mazeBlock.offsetLeft.toString();
+
+					// identify player start block, show info; attach event listeners to blocks
+					if (mazeBlock.id != this.nogoBlock) {
+						mazeBlock.addEventListener( 'click', this.buildWalls );
+						mazeBlock.addEventListener( 'dblclick', this.setGoal );
+					} else {
+						mazeBlock.classList.add('nogo');
+						var infoBox = mazeBlock.appendChild(document.createElement('p'));
+						infoBox.innerHTML = "The player starts here...";
+						mazeBlock.addEventListener( 'mouseover', function(){ infoBox.style.display = 'inline' } );
+						mazeBlock.addEventListener( 'mouseout', function(){ infoBox.style.display = 'none' } );
+					}
+				}
+		  	}
 		}
 
 
@@ -114,8 +108,8 @@ function playMaze() {
 	var blocks = document.getElementsByClassName('mazeBlock');
 	for (let i = 0; i < blocks.length; i++) {
 		let block = blocks[i];
-		block.removeEventListener( 'click', buildWalls );
-		block.removeEventListener( 'dblclick', setGoal );
+		block.removeEventListener( 'click', mazeBuilder.buildWalls );
+		block.removeEventListener( 'dblclick', mazeBuilder.setGoal );
 		block.innerHTML = '';
 		block.classList.remove('mazeBlockSetup');
 		block.classList.remove('prizeSetup');
@@ -249,8 +243,3 @@ function playMaze() {
 			setTimeout(function() { restartGame(); }, 1800);
 	
 		}
-
-
-
-
-
